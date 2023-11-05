@@ -147,32 +147,32 @@ eck-elasticsearch:
                 storage: 10Gi
             storageClassName: gp3-retain
 
-#ingress:
-#  enabled: false
-
 ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/target-node-labels: 'elasticsearch.k8s.elastic.co/node-ingest=true'
-    alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
-    alb.ingress.kubernetes.io/backend-protocol: HTTPS
-    alb.ingress.kubernetes.io/load-balancer-name: eck-ingest
-    alb.ingress.kubernetes.io/healthcheck-path: /
-    # alb.ingress.kubernetes.io/inbound-cidrs: 35.158.4.35/32, 81.20.149.200/32, 3.120.223.173/32, 34.251.255.175/32, 104.16.0.0/12
-    alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.preserve_host_header.enabled=true
-    external-dns.alpha.kubernetes.io/hostname: ingest.studentX.threatlab.ninja
-  hosts:
-    - host: ingest.studentX.threatlab.ninja
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: eck-elasticsearch-es-ingest
-              port:
-                number: 9200
+  enabled: false
+
+#ingress:
+#  enabled: true
+#  annotations:
+#    kubernetes.io/ingress.class: alb
+#    alb.ingress.kubernetes.io/scheme: internet-facing
+#    alb.ingress.kubernetes.io/target-type: ip
+#    alb.ingress.kubernetes.io/target-node-labels: 'elasticsearch.k8s.elastic.co/node-ingest=true'
+#    alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"
+#    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+#    alb.ingress.kubernetes.io/ssl-redirect: '443'
+#    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+#    alb.ingress.kubernetes.io/load-balancer-name: eck-ingest
+#    alb.ingress.kubernetes.io/healthcheck-path: /
+#    # alb.ingress.kubernetes.io/inbound-cidrs: 35.158.4.35/32, 81.20.149.200/32, 3.120.223.173/32, 34.251.255.175/32, 104.16.0.0/12
+#    alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.preserve_host_header.enabled=true
+#    external-dns.alpha.kubernetes.io/hostname: ingest.studentX.threatlab.ninja
+#  hosts:
+#    - host: ingest.studentX.threatlab.ninja
+#      paths:
+#        - path: /
+#          pathType: Prefix
+#          backend:
+#            service:
+#              name: eck-elasticsearch-es-ingest
+#              port:
+#                number: 9200
