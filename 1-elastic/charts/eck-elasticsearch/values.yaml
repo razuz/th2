@@ -27,13 +27,13 @@ eck-elasticsearch:
         spec:
           containers:
             - name: elasticsearch
-              resources:
-                requests:
-                  cpu: 150m
-                  memory: 1Gi
-                limits:
-                  cpu: 150m
-                  memory: 1Gi
+#              resources:
+#                requests:
+#                  cpu: 150m
+#                  memory: 1Gi
+#                limits:
+#                  cpu: 150m
+#                  memory: 1Gi
               env:
                 - name: ZONE
                   valueFrom:
@@ -58,7 +58,7 @@ eck-elasticsearch:
                 storage: 10Gi
             storageClassName: gp3-retain
     - name: data
-      count: 1
+      count: 2
       config:
         node.store.allow_mmap: false
         node.roles: [ "data_warm", "data_hot", "data_content", "remote_cluster_client" ]
@@ -73,13 +73,13 @@ eck-elasticsearch:
             cluster.routing.allocation.disk.watermark.flood_stage: 5%
           containers:
             - name: elasticsearch
-              resources:
-                requests:
-                  cpu: 250m
-                  memory: 1Gi
-                limits:
-                  cpu: 250m
-                  memory: 1Gi
+#              resources:
+#                requests:
+#                  cpu: 250m
+#                  memory: 1Gi
+#                limits:
+#                  cpu: 250m
+#                  memory: 1Gi
               env:
                 - name: ZONE
                   valueFrom:
@@ -115,12 +115,12 @@ eck-elasticsearch:
           containers:
             - name: elasticsearch
               resources:
-                requests:
-                  cpu: 150m
-                  memory: 1Gi
-                limits:
-                  cpu: 150m
-                  memory: 1Gi
+#                requests:
+#                  cpu: 150m
+#                  memory: 1Gi
+#                limits:
+#                  cpu: 150m
+#                  memory: 1Gi
               env:
                 - name: ZONE
                   valueFrom:

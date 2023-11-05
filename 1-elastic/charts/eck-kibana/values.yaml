@@ -80,13 +80,13 @@ eck-kibana:
             env:
               - name: NODE_OPTIONS
                 value: "--max-old-space-size=2048"
-            resources:
-              requests:
-                memory: 0.5Gi
-                cpu: 100m
-              limits:
-                memory: 0.5Gi
-                cpu: 100m
+#            resources:
+#              requests:
+#                memory: 0.5Gi
+#                cpu: 100m
+#              limits:
+#                memory: 0.5Gi
+#                cpu: 100m
 
 #ingress:
 #  enabled: false
