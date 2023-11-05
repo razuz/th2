@@ -9,59 +9,11 @@ eck-elasticsearch:
   volumeClaimDeletePolicy: "DeleteOnScaledownAndClusterDeletion"
 
   nodeSets:
-    - name: master
+    - name: full
       count: 1
       config:
-        node.roles: [ "master", "remote_cluster_client" ]
         node.store.allow_mmap: false
-        cluster.routing.allocation.disk.threshold_enabled: true
-        cluster.routing.allocation.disk.watermark.low: 15gb
-        cluster.routing.allocation.disk.watermark.high: 10gb
-        cluster.routing.allocation.disk.watermark.flood_stage: 5gb
-        cluster.info.update.interval: 10s
-        cluster.routing.rebalance.enable: all
-        cluster.routing.allocation.allow_rebalance: indices_primaries_active
-        node.attr.zone: ${ZONE}
-        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
-      podTemplate:
-        spec:
-          containers:
-            - name: elasticsearch
-#              resources:
-#                requests:
-#                  cpu: 150m
-#                  memory: 1Gi
-#                limits:
-#                  cpu: 150m
-#                  memory: 1Gi
-              env:
-                - name: ZONE
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: metadata.annotations['topology.kubernetes.io/zone']
-          topologySpreadConstraints:
-            - maxSkew: 2
-              topologyKey: topology.kubernetes.io/zone
-              whenUnsatisfiable: DoNotSchedule
-              labelSelector:
-                matchLabels:
-                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
-                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
-      volumeClaimTemplates:
-        - metadata:
-            name: elasticsearch-data
-          spec:
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 10Gi
-            storageClassName: gp3-retain
-    - name: data
-      count: 2
-      config:
-        node.store.allow_mmap: false
-        node.roles: [ "data_warm", "data_hot", "data_content", "remote_cluster_client" ]
+        node.roles: [ "master", "ingest", "transform", "data_warm", "data_hot", "data_content", "remote_cluster_client" ]
         node.attr.zone: ${ZONE}
         cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
       podTemplate:
@@ -73,13 +25,13 @@ eck-elasticsearch:
             cluster.routing.allocation.disk.watermark.flood_stage: 5%
           containers:
             - name: elasticsearch
-#              resources:
-#                requests:
-#                  cpu: 250m
-#                  memory: 1Gi
-#                limits:
-#                  cpu: 250m
-#                  memory: 1Gi
+              resources:
+                requests:
+                  cpu: 500m
+                  memory: 2Gi
+                limits:
+                  cpu: 500m
+                  memory: 2Gi
               env:
                 - name: ZONE
                   valueFrom:
@@ -103,47 +55,141 @@ eck-elasticsearch:
               requests:
                 storage: 50Gi
             storageClassName: gp3-retain
-    - name: ingest
-      count: 1
-      config:
-        node.store.allow_mmap: false
-        node.roles: [ "ingest", "transform", "remote_cluster_client" ]
-        node.attr.zone: ${ZONE}
-        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
-      podTemplate:
-        spec:
-          containers:
-            - name: elasticsearch
-              resources:
+#    - name: master
+#      count: 1
+#      config:
+#        node.roles: [ "master", "remote_cluster_client" ]
+#        node.store.allow_mmap: false
+#        cluster.routing.allocation.disk.threshold_enabled: true
+#        cluster.routing.allocation.disk.watermark.low: 15gb
+#        cluster.routing.allocation.disk.watermark.high: 10gb
+#        cluster.routing.allocation.disk.watermark.flood_stage: 5gb
+#        cluster.info.update.interval: 10s
+#        cluster.routing.rebalance.enable: all
+#        cluster.routing.allocation.allow_rebalance: indices_primaries_active
+#        node.attr.zone: ${ZONE}
+#        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
+#      podTemplate:
+#        spec:
+#          containers:
+#            - name: elasticsearch
+#              resources:
 #                requests:
 #                  cpu: 150m
 #                  memory: 1Gi
 #                limits:
 #                  cpu: 150m
 #                  memory: 1Gi
-              env:
-                - name: ZONE
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: metadata.annotations['topology.kubernetes.io/zone']
-          topologySpreadConstraints:
-            - maxSkew: 2
-              topologyKey: topology.kubernetes.io/zone
-              whenUnsatisfiable: DoNotSchedule
-              labelSelector:
-                matchLabels:
-                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
-                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
-      volumeClaimTemplates:
-        - metadata:
-            name: elasticsearch-data
-          spec:
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 10Gi
-            storageClassName: gp3-retain
+#              env:
+#                - name: ZONE
+#                  valueFrom:
+#                    fieldRef:
+#                      fieldPath: metadata.annotations['topology.kubernetes.io/zone']
+#          topologySpreadConstraints:
+#            - maxSkew: 2
+#              topologyKey: topology.kubernetes.io/zone
+#              whenUnsatisfiable: DoNotSchedule
+#              labelSelector:
+#                matchLabels:
+#                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
+#                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
+#      volumeClaimTemplates:
+#        - metadata:
+#            name: elasticsearch-data
+#          spec:
+#            accessModes:
+#              - ReadWriteOnce
+#            resources:
+#              requests:
+#                storage: 10Gi
+#            storageClassName: gp3-retain
+#    - name: data
+#      count: 2
+#      config:
+#        node.store.allow_mmap: false
+#        node.roles: [ "data_warm", "data_hot", "data_content", "remote_cluster_client" ]
+#        node.attr.zone: ${ZONE}
+#        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
+#      podTemplate:
+#        spec:
+#          config:
+#            cluster.routing.allocation.disk.threshold_enabled: true
+#            cluster.routing.allocation.disk.watermark.low: 15%
+#            cluster.routing.allocation.disk.watermark.high: 10%
+#            cluster.routing.allocation.disk.watermark.flood_stage: 5%
+#          containers:
+#            - name: elasticsearch
+#              resources:
+#                requests:
+#                  cpu: 250m
+#                  memory: 1Gi
+#                limits:
+#                  cpu: 250m
+#                  memory: 1Gi
+#              env:
+#                - name: ZONE
+#                  valueFrom:
+#                    fieldRef:
+#                      fieldPath: metadata.annotations['topology.kubernetes.io/zone']
+#          topologySpreadConstraints:
+#            - maxSkew: 2
+#              topologyKey: topology.kubernetes.io/zone
+#              whenUnsatisfiable: DoNotSchedule
+#              labelSelector:
+#                matchLabels:
+#                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
+#                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
+#      volumeClaimTemplates:
+#        - metadata:
+#            name: elasticsearch-data
+#          spec:
+#            accessModes:
+#              - ReadWriteOnce
+#            resources:
+#              requests:
+#                storage: 50Gi
+#            storageClassName: gp3-retain
+#    - name: ingest
+#      count: 1
+#      config:
+#        node.store.allow_mmap: false
+#        node.roles: [ "ingest", "transform", "remote_cluster_client" ]
+#        node.attr.zone: ${ZONE}
+#        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
+#      podTemplate:
+#        spec:
+#          containers:
+#            - name: elasticsearch
+#              resources:
+#                requests:
+#                  cpu: 150m
+#                  memory: 1Gi
+#                limits:
+#                  cpu: 150m
+#                  memory: 1Gi
+#              env:
+#                - name: ZONE
+#                  valueFrom:
+#                    fieldRef:
+#                      fieldPath: metadata.annotations['topology.kubernetes.io/zone']
+#          topologySpreadConstraints:
+#            - maxSkew: 2
+#              topologyKey: topology.kubernetes.io/zone
+#              whenUnsatisfiable: DoNotSchedule
+#              labelSelector:
+#                matchLabels:
+#                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
+#                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
+#      volumeClaimTemplates:
+#        - metadata:
+#            name: elasticsearch-data
+#          spec:
+#            accessModes:
+#              - ReadWriteOnce
+#            resources:
+#              requests:
+#                storage: 10Gi
+#            storageClassName: gp3-retain
 
 ingress:
   enabled: false
