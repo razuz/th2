@@ -21,8 +21,8 @@ eck-elasticsearch:
         cluster.info.update.interval: 10s
         cluster.routing.rebalance.enable: all
         cluster.routing.allocation.allow_rebalance: indices_primaries_active
-        node.attr.zone: ${ZONE}
-        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
+#        node.attr.zone: ${ZONE}
+#        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
       podTemplate:
         spec:
           containers:
