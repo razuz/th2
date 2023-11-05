@@ -56,7 +56,7 @@ eck-elasticsearch:
             resources:
               requests:
                 storage: 10Gi
-            storageClassName: gp3-retain
+            storageClassName: gp3
     - name: data
       count: 1
       config:
@@ -143,7 +143,7 @@ eck-elasticsearch:
             resources:
               requests:
                 storage: 10Gi
-            storageClassName: gp3-retain
+            storageClassName: gp3
 
 ingress:
   enabled: false
