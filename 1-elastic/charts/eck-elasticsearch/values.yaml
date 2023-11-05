@@ -118,10 +118,10 @@ eck-elasticsearch:
             - name: elasticsearch
               resources:
                 requests:
-                  cpu: 1
+                  cpu: 500m
                   memory: 1Gi
                 limits:
-                  cpu: 1
+                  cpu: 500m
                   memory: 2Gi
               env:
                 - name: ZONE
