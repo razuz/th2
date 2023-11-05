@@ -19,11 +19,11 @@ eck-kibana:
           - name: "eck-elasticsearch"
             namespace: "studentX"
     config:
-      server.name: "kibana.threatlab.ninja"
-      server.publicBaseUrl: "https://kibana.threatlab.ninja"
+      server.name: "kibana-studentX.threatlab.ninja"
+      server.publicBaseUrl: "https://kibana-studentX.threatlab.ninja"
       server.cors.enabled: true
       server.cors.allowOrigin:
-        - "https://kibana.threatlab.ninja"
+        - "https://kibana-studentX.threatlab.ninja"
       server.securityResponseHeaders.referrerPolicy: "same-origin"
       server.securityResponseHeaders.disableEmbedding: true
       telemetry.optIn: false
@@ -32,10 +32,10 @@ eck-kibana:
       monitoring.kibana.collection.interval: 10
       monitoring.ui.enabled: true
       xpack.fleet.agents.elasticsearch.hosts: [
-        "https://ingest.threatlab.ninja:443"
+        "https://ingest-studentX.threatlab.ninja:443"
       ]
       xpack.fleet.agents.fleet_server.hosts: [
-        "https://fleet.threatlab.ninja:443"
+        "https://fleet-studentX.threatlab.ninja:443"
       ]
       xpack.fleet.packages:
         - name: system
@@ -82,11 +82,11 @@ eck-kibana:
                 value: "--max-old-space-size=2048"
             resources:
               requests:
-                memory: 1Gi
-                cpu: 1
+                memory: 0.5Gi
+                cpu: 100m
               limits:
-                memory: 2Gi
-                cpu: 2
+                memory: 0.5Gi
+                cpu: 100m
 
 #ingress:
 #  enabled: false
@@ -108,9 +108,9 @@ ingress:
     alb.ingress.kubernetes.io/healthcheck-path: /login
 #    alb.ingress.kubernetes.io/inbound-cidrs: 35.158.4.35/32, 81.20.149.200/32, 3.120.223.173/32, 34.251.255.175/32, 104.16.0.0/12
     alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.preserve_host_header.enabled=true
-    external-dns.alpha.kubernetes.io/hostname: kibana.threatlab.ninja
+    external-dns.alpha.kubernetes.io/hostname: kibana-studentX.threatlab.ninja
   hosts:
-    - host: kibana.threatlab.ninja
+    - host: kibana-studentX.threatlab.ninja
       paths:
         - path: /
           pathType: Prefix
