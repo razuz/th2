@@ -10,7 +10,7 @@ eck-elasticsearch:
 
   nodeSets:
     - name: master
-      count: 1
+      count: 2
       config:
         node.roles: [ "master", "remote_cluster_client" ]
         node.store.allow_mmap: false
@@ -78,8 +78,8 @@ eck-elasticsearch:
                   cpu: 500m
                   memory: 1Gi
                 limits:
-                  cpu: 500m
-                  memory: 1Gi
+                  cpu: 1
+                  memory: 2Gi
               env:
                 - name: ZONE
                   valueFrom:
