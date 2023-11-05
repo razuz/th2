@@ -82,11 +82,11 @@ eck-kibana:
                 value: "--max-old-space-size=2048"
             resources:
               requests:
-                memory: 0.5Gi
-                cpu: 200m
+                memory: 1Gi
+                cpu: 250m
               limits:
-                memory: 0.5Gi
-                cpu: 200m
+                memory: 1Gi
+                cpu: 250m
 
 #ingress:
 #  enabled: false
