@@ -15,7 +15,7 @@ eck-fleet-server:
         namespace: studentX
 
     deployment:
-      replicas: 2
+      replicas: 1
       podTemplate:
         spec:
           serviceAccountName: eck-fleet-server

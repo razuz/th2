@@ -1,10 +1,25 @@
 eck-operator:
     nameOverride: "elastic-operator"
     fullnameOverride: "elastic-operator"
-    managedNamespaces: ["studentX"]
+    managedNamespaces: [
+        "elastic-system",
+        "elastic-service",
+        "student1",
+        "student2",
+        "student3",
+        "student4",
+        "student5",
+        "student6",
+        "student7",
+        "student8",
+        "student9",
+        "student10",
+        "student11",
+        "student12",
+    ]
     installCRDs: true
 
-    replicaCount: 1
+    replicaCount: 2
 
     image:
         # repository is the container image prefixed by the registry name.
@@ -14,3 +29,6 @@ eck-operator:
         # tag is the container image tag. If not defined, defaults to chart appVersion.
         tag: 2.9.0
 
+    podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
