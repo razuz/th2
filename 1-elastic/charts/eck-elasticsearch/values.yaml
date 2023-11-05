@@ -23,7 +23,6 @@ eck-elasticsearch:
         cluster.routing.allocation.allow_rebalance: indices_primaries_active
         node.attr.zone: ${ZONE}
         cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
-
       podTemplate:
         spec:
           containers:
@@ -77,7 +76,7 @@ eck-elasticsearch:
               resources:
                 requests:
                   cpu: 250m
-                  memory: 2Gi
+                  memory: 1Gi
                 limits:
                   cpu: 250m
                   memory: 1Gi
@@ -104,7 +103,6 @@ eck-elasticsearch:
               requests:
                 storage: 50Gi
             storageClassName: gp3-retain
-
     - name: ingest
       count: 1
       config:
