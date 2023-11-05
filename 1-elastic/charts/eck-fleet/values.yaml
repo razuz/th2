@@ -18,28 +18,28 @@ eck-fleet-server:
       replicas: 1
       podTemplate:
         spec:
-          serviceAccountName: eck-fleet-server
+          serviceAccountName: eck-fleet-server-studentX
           automountServiceAccountToken: true
           securityContext:
             runAsUser: 0
 
   serviceAccount:
-    name: eck-fleet-server
+    name: eck-fleet-server-studentX
     namespace: studentX
 
   clusterRoleBinding:
-    name: eck-fleet-server
+    name: eck-fleet-server-studentX
     subjects:
       - kind: ServiceAccount
-        name: eck-fleet-server
+        name: eck-fleet-server-studentX
         namespace: studentX
     roleRef:
       kind: ClusterRole
-      name: eck-fleet-server
+      name: eck-fleet-server-studentX
       apiGroup: rbac.authorization.k8s.io
 
   clusterRole:
-    name: eck-fleet-server
+    name: eck-fleet-server-studentX
     rules:
       - apiGroups: [""]
         resources:
@@ -67,7 +67,7 @@ ingress:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/target-node-labels: 'agent.k8s.elastic.co/name=eck-fleet-eck-fleet-server'
+    alb.ingress.kubernetes.io/target-node-labels: 'agent.k8s.elastic.co/name=eck-fleet-eck-fleet-server-studentX'
     alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     alb.ingress.kubernetes.io/ssl-redirect: '443'
