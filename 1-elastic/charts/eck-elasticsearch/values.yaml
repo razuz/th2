@@ -29,10 +29,10 @@ eck-elasticsearch:
             - name: elasticsearch
               resources:
                 requests:
-                  cpu: 150m
+                  cpu: 200m
                   memory: 1Gi
                 limits:
-                  cpu: 150m
+                  cpu: 200m
                   memory: 1Gi
               env:
                 - name: ZONE
@@ -45,8 +45,8 @@ eck-elasticsearch:
               whenUnsatisfiable: DoNotSchedule
               labelSelector:
                 matchLabels:
-                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
-                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
+                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch-studentX
+                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data-studentX
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
@@ -75,10 +75,10 @@ eck-elasticsearch:
             - name: elasticsearch
               resources:
                 requests:
-                  cpu: 250m
+                  cpu: 500m
                   memory: 1Gi
                 limits:
-                  cpu: 250m
+                  cpu: 500m
                   memory: 1Gi
               env:
                 - name: ZONE
@@ -91,8 +91,8 @@ eck-elasticsearch:
               whenUnsatisfiable: DoNotSchedule
               labelSelector:
                 matchLabels:
-                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
-                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
+                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch-studentX
+                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data-studentX
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
@@ -132,8 +132,8 @@ eck-elasticsearch:
               whenUnsatisfiable: DoNotSchedule
               labelSelector:
                 matchLabels:
-                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
-                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
+                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch-studentX
+                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data-studentX
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
