@@ -1,0 +1,9 @@
+.DS_Store
+*.hcl
+*.tfstate
+*.tfstate.backup
+.idea
+.terraform
+*.iml
+providers.tf
+backend.tf

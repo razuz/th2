@@ -1,0 +1,56 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: eck-job-config
+  namespace: {{.Values.namespace}}
+spec:
+  parallelism: 1
+  completions: 1
+  ttlSecondsAfterFinished: 60
+  template:
+    metadata:
+      name: eck-job-config
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-elasticsearch
+          image: alpine
+          command:
+            [
+              "sh",
+              "-c",
+              "for i in $(seq 1 300); do nc -zvw1 {{ .Values.host_http }} 9200 && exit 0 || sleep 3; done; exit 1",
+            ]
+      containers:
+        - name: eck-job-config
+          image: curlimages/curl
+          env:
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: eck-elasticsearch-es-elastic-user
+                  key: {{ .Values.user }}
+          command:
+            - /bin/sh
+            - -c
+            - |-
+              {{- range .Values.ilm }}
+              echo "Creating ILM policy {{ .name }}"
+              curl -s -k -u {{ $.Values.user }}:$ELASTICSEARCH_PASSWORD -X {{ .method | default "PUT" }} https://{{ $.Values.host_http }}:9200/_ilm/policy/{{ .name }}?pretty \
+                -H 'Content-Type: application/json' \
+                -d '{{ .policy | nindent 22 }}'
+              {{- end }}
+              {{/* Handle user creation */}}
+              {{- range .Values.users }}
+              {{- $PASSWORD := randAlphaNum 32 -}}
+              echo "Creating user {{ .username }} with password {{ $PASSWORD }}"
+              curl -s -k -u {{ $.Values.user }}:$ELASTICSEARCH_PASSWORD -X {{ .method | default "POST" }} https://{{ $.Values.host_http }}:9200/_security/user/{{ .username }}?pretty \
+                -H 'Content-Type: application/json' \
+                -d '{
+                    "password" : {{- $PASSWORD | quote -}},
+                    "roles" : {{ .roles | toJson }},
+                    "full_name" : {{ .fullname | quote }},
+                    "email" : {{ .email | quote }}
+                }'
+              {{- end }}

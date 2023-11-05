@@ -1,0 +1,90 @@
+---
+eck-fleet-server:
+  version: 8.10.4
+  annotations:
+    eck.k8s.elastic.co/license: basic
+
+  spec:
+    policyID: eck-fleet
+    kibanaRef:
+      name: eck-kibana
+      namespace: studentX
+
+    elasticsearchRefs:
+      - name: eck-elasticsearch
+        namespace: studentX
+
+    deployment:
+      replicas: 2
+      podTemplate:
+        spec:
+          serviceAccountName: eck-fleet-server
+          automountServiceAccountToken: true
+          securityContext:
+            runAsUser: 0
+
+  serviceAccount:
+    name: eck-fleet-server
+    namespace: studentX
+
+  clusterRoleBinding:
+    name: eck-fleet-server
+    subjects:
+      - kind: ServiceAccount
+        name: eck-fleet-server
+        namespace: studentX
+    roleRef:
+      kind: ClusterRole
+      name: eck-fleet-server
+      apiGroup: rbac.authorization.k8s.io
+
+  clusterRole:
+    name: eck-fleet-server
+    rules:
+      - apiGroups: [""]
+        resources:
+          - pods
+          - namespaces
+          - nodes
+        verbs:
+          - get
+          - watch
+          - list
+      - apiGroups: ["coordination.k8s.io"]
+        resources:
+          - leases
+        verbs:
+          - get
+          - create
+          - update
+
+#ingress:
+#  enabled: false
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-node-labels: 'agent.k8s.elastic.co/name=eck-fleet-eck-fleet-server'
+    alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/load-balancer-name: eck-fleet
+    #    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/healthcheck-port: '8220'
+    #    alb.ingress.kubernetes.io/inbound-cidrs: 35.158.4.35/32, 81.20.149.200/32, 3.120.223.173/32, 34.251.255.175/32, 104.16.0.0/12
+    alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.preserve_host_header.enabled=true
+    external-dns.alpha.kubernetes.io/hostname: fleet.threatlab.ninja
+  hosts:
+    - host: fleet.threatlab.ninja
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: eck-fleet-eck-fleet-server-agent-http
+              port:
+                number: 8220

@@ -1,0 +1,6 @@
+dependencies:
+- name: eck-kibana
+  repository: https://helm.elastic.co
+  version: 0.7.0
+digest: sha256:b949bd98e68ca9ec8ca6f41737a48f9a97da5e7e596b7f46eb4a272ebf5922fd
+generated: "2023-11-02T22:01:02.568666851+02:00"

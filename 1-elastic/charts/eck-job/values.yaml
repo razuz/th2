@@ -1,0 +1,135 @@
+---
+host: eck-elasticsearch
+namespace: studentX
+user: elastic
+host_http: eck-elasticsearch-es-http
+
+# example to generate access for user
+#users:
+#  - username: rasmus.manna
+#    fullname: Rasmus Manna
+#    email: rasmus.manna@gmail.com
+#    roles:
+#      - "superuser"
+#      - "monitoring_user"
+#      - "kibana_admin"
+
+ilm:
+  - name: filebeat
+    method: PUT
+    policy: |
+      {
+        "policy": {
+          "phases": {
+            "hot": {
+              "min_age": "0ms",
+              "actions": {
+                "rollover": {
+                  "max_age": "7d",
+                  "max_primary_shard_size": "10gb"
+                }
+              }
+            }
+          }
+        }
+      }
+  - name: kibana-event-log-policy
+    method: PUT
+    policy: |
+      {
+        "policy": {
+          "phases": {
+            "hot": {
+              "min_age": "0ms",
+              "actions": {
+                "rollover": {
+                  "max_age": "7d",
+                  "max_size": "10gb"
+                }
+              }
+            },
+            "delete": {
+              "min_age": "7d",
+              "actions": {
+                "delete": {
+                  "delete_searchable_snapshot": true
+                }
+              }
+            }
+          },
+          "_meta": {
+            "description": "ilm policy the Kibana event log, created initially by Kibana, but updated by the user, not Kibana",
+            "managed": false
+          }
+        }
+      }
+  - name: metricbeat
+    method: PUT
+    policy: |
+      {
+        "policy": {
+          "phases": {
+            "hot": {
+              "min_age": "0ms",
+              "actions": {
+                "rollover": {
+                  "max_age": "7d",
+                  "max_primary_shard_size": "10gb"
+                }
+              }
+            }
+          }
+        }
+      }
+  - name: generic-ilm-7d
+    method: PUT
+    policy: |
+      {
+        "policy": {
+          "phases": {
+            "hot": {
+              "actions": {
+                "rollover": {
+                  "max_primary_shard_size": "10gb"
+                },
+                "set_priority": {
+                  "priority": 100
+                }
+              },
+              "min_age": "0ms"
+            },
+            "delete": {
+              "min_age": "7d",
+              "actions": {
+                "delete": {}
+              }
+            }
+          }
+        }
+      }
+  - name: generic-ilm-30d
+    method: PUT
+    policy: |
+      {
+        "policy": {
+          "phases": {
+            "hot": {
+              "actions": {
+                "rollover": {
+                  "max_primary_shard_size": "10gb"
+                },
+                "set_priority": {
+                  "priority": 100
+                }
+              },
+              "min_age": "0ms"
+            },
+            "delete": {
+              "min_age": "30d",
+              "actions": {
+                "delete": {}
+              }
+            }
+          }
+        }
+      }

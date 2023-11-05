@@ -1,0 +1,11 @@
+apiVersion: v2
+appVersion: v2.9.0
+description: Elastic Cloud on Kubernetes (ECK) operator
+home: https://github.com/elastic/cloud-on-k8s
+icon: https://helm.elastic.co/icons/eck.png
+name: eck-operator
+version: 0.0.1
+dependencies:
+  - name: eck-operator
+    version: 2.9.0
+    repository: https://helm.elastic.co

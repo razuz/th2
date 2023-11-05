@@ -1,0 +1,6 @@
+dependencies:
+- name: eck-fleet-server
+  repository: https://helm.elastic.co
+  version: 0.7.0
+digest: sha256:90e203c37678b7f5db4cc54983f8f082e8caf152ad5743785cd10796df3abe9a
+generated: "2023-11-05T15:18:39.909549641+02:00"

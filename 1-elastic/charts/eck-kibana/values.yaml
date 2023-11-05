@@ -1,0 +1,121 @@
+---
+eck-kibana:
+  annotations:
+    eck.k8s.elastic.co/license: basic
+
+  spec:
+    version: 8.10.4
+    count: 1
+    elasticsearchRef:
+      name: "eck-elasticsearch"
+      namespace: "studentX"
+    monitoring:
+      metrics:
+        elasticsearchRefs:
+          - name: "eck-elasticsearch"
+            namespace: "studentX"
+      logs:
+        elasticsearchRefs:
+          - name: "eck-elasticsearch"
+            namespace: "studentX"
+    config:
+      server.name: "kibana.threatlab.ninja"
+      server.publicBaseUrl: "https://kibana.threatlab.ninja"
+      server.cors.enabled: true
+      server.cors.allowOrigin:
+        - "https://kibana.threatlab.ninja"
+      server.securityResponseHeaders.referrerPolicy: "same-origin"
+      server.securityResponseHeaders.disableEmbedding: true
+      telemetry.optIn: false
+      telemetry.allowChangingOptInStatus: false
+      monitoring.kibana.collection.enabled: true
+      monitoring.kibana.collection.interval: 10
+      monitoring.ui.enabled: true
+      xpack.fleet.agents.elasticsearch.hosts: [
+        "https://ingest.threatlab.ninja:443"
+      ]
+      xpack.fleet.agents.fleet_server.hosts: [
+        "https://fleet.threatlab.ninja:443"
+      ]
+      xpack.fleet.packages:
+        - name: system
+          version: latest
+        - name: elastic_agent
+          version: latest
+        - name: fleet_server
+          version: latest
+        - name: kubernetes
+          version: latest
+      xpack.fleet.agentPolicies:
+        - name: Fleet Server on ECK policy
+          id: eck-fleet
+          namespace: default
+          monitoring_enabled:
+            - logs
+            - metrics
+          unenroll_timeout: 900
+          package_policies:
+            - name: fleet_server-1
+              id: fleet_server-1
+              package:
+                name: fleet_server
+        - name: Elastic Agent on ECK policy
+          id: eck-agent
+          namespace: default
+          monitoring_enabled:
+            - logs
+            - metrics
+          unenroll_timeout: 900
+          package_policies:
+            - package:
+                name: system
+              name: system-1
+            - package:
+                name: kubernetes
+              name: kubernetes-1
+    podTemplate:
+      spec:
+        containers:
+          - name: kibana
+            env:
+              - name: NODE_OPTIONS
+                value: "--max-old-space-size=2048"
+            resources:
+              requests:
+                memory: 1Gi
+                cpu: 1
+              limits:
+                memory: 2Gi
+                cpu: 2
+
+#ingress:
+#  enabled: false
+
+## Example:
+## How to connect to the service. Specifies AWS Load Balancer configuration and AWS Route53 domain name
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-node-labels: 'kibana.k8s.elastic.co/name=eck-kibana'
+    alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/load-balancer-name: eck-kibana
+    alb.ingress.kubernetes.io/healthcheck-path: /login
+#    alb.ingress.kubernetes.io/inbound-cidrs: 35.158.4.35/32, 81.20.149.200/32, 3.120.223.173/32, 34.251.255.175/32, 104.16.0.0/12
+    alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.preserve_host_header.enabled=true
+    external-dns.alpha.kubernetes.io/hostname: kibana.threatlab.ninja
+  hosts:
+    - host: kibana.threatlab.ninja
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: eck-kibana-kb-http
+              port:
+                number: 5601

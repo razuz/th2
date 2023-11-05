@@ -1,0 +1,178 @@
+---
+eck-elasticsearch:
+  version: 8.10.4
+  annotations:
+    eck.k8s.elastic.co/license: basic
+    eck.k8s.elastic.co/downward-node-labels: "topology.kubernetes.io/zone"
+    eck.k8s.elastic.co/disable-upgrade-predicates: "only_restart_healthy_node_if_green_or_yellow"
+
+  volumeClaimDeletePolicy: "DeleteOnScaledownAndClusterDeletion"
+
+  nodeSets:
+    - name: master
+      count: 3
+      config:
+        node.roles: [ "master", "remote_cluster_client" ]
+        node.store.allow_mmap: false
+        cluster.routing.allocation.disk.threshold_enabled: true
+        cluster.routing.allocation.disk.watermark.low: 15gb
+        cluster.routing.allocation.disk.watermark.high: 10gb
+        cluster.routing.allocation.disk.watermark.flood_stage: 5gb
+        cluster.info.update.interval: 10s
+        cluster.routing.rebalance.enable: all
+        cluster.routing.allocation.allow_rebalance: indices_primaries_active
+        node.attr.zone: ${ZONE}
+        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
+
+      podTemplate:
+        spec:
+          containers:
+            - name: elasticsearch
+              resources:
+                requests:
+                  cpu: 500m
+                  memory: 1Gi
+                limits:
+                  cpu: 500m
+                  memory: 2Gi
+              env:
+                - name: ZONE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['topology.kubernetes.io/zone']
+          topologySpreadConstraints:
+            - maxSkew: 2
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
+                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 10Gi
+            storageClassName: gp3-retain
+    - name: data
+      count: 2
+      config:
+        node.store.allow_mmap: false
+        node.roles: [ "data_warm", "data_hot", "data_content", "remote_cluster_client" ]
+        node.attr.zone: ${ZONE}
+        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
+      podTemplate:
+        spec:
+          config:
+            cluster.routing.allocation.disk.threshold_enabled: true
+            cluster.routing.allocation.disk.watermark.low: 15%
+            cluster.routing.allocation.disk.watermark.high: 10%
+            cluster.routing.allocation.disk.watermark.flood_stage: 5%
+          containers:
+            - name: elasticsearch
+              resources:
+                requests:
+                  cpu: 1
+                  memory: 2Gi
+                limits:
+                  cpu: 1
+                  memory: 4Gi
+              env:
+                - name: ZONE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['topology.kubernetes.io/zone']
+          topologySpreadConstraints:
+            - maxSkew: 2
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
+                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 50Gi
+            storageClassName: gp3-retain
+
+    - name: ingest
+      count: 2
+      config:
+        node.store.allow_mmap: false
+        node.roles: [ "ingest", "transform", "remote_cluster_client" ]
+        node.attr.zone: ${ZONE}
+        cluster.routing.allocation.awareness.attributes: k8s_node_name,zone
+      podTemplate:
+        spec:
+          containers:
+            - name: elasticsearch
+              resources:
+                requests:
+                  cpu: 1
+                  memory: 1Gi
+                limits:
+                  cpu: 1
+                  memory: 2Gi
+              env:
+                - name: ZONE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['topology.kubernetes.io/zone']
+          topologySpreadConstraints:
+            - maxSkew: 2
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: eck-elasticsearch
+                  elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 10Gi
+            storageClassName: gp3-retain
+
+#ingress:
+#  enabled: false
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-node-labels: 'elasticsearch.k8s.elastic.co/node-ingest=true'
+    alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/load-balancer-name: eck-ingest
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    # alb.ingress.kubernetes.io/inbound-cidrs: 35.158.4.35/32, 81.20.149.200/32, 3.120.223.173/32, 34.251.255.175/32, 104.16.0.0/12
+    alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.preserve_host_header.enabled=true
+    external-dns.alpha.kubernetes.io/hostname: ingest.threatlab.ninja
+  hosts:
+    - host: ingest.threatlab.ninja
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: eck-elasticsearch-es-ingest
+              port:
+                number: 9200
