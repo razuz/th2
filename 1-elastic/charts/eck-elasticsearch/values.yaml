@@ -49,7 +49,7 @@ eck-elasticsearch:
                   elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data-studentX
       volumeClaimTemplates:
         - metadata:
-            name: elasticsearch-master
+            name: elasticsearch-data
           spec:
             accessModes:
               - ReadWriteOnce
@@ -136,7 +136,7 @@ eck-elasticsearch:
                   elasticsearch.k8s.elastic.co/statefulset-name: eck-elasticsearch-es-data-studentX
       volumeClaimTemplates:
         - metadata:
-            name: elasticsearch-ingest
+            name: elasticsearch-data
           spec:
             accessModes:
               - ReadWriteOnce
