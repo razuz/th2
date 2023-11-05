@@ -29,10 +29,10 @@ eck-elasticsearch:
             - name: elasticsearch
               resources:
                 requests:
-                  cpu: 250m
+#                  cpu: 250m
                   memory: 1Gi
                 limits:
-                  cpu: 250m
+                  cpu: 1
                   memory: 1Gi
               env:
                 - name: ZONE
@@ -73,13 +73,13 @@ eck-elasticsearch:
             cluster.routing.allocation.disk.watermark.flood_stage: 5%
           containers:
             - name: elasticsearch
-#              resources:
+              resources:
 #                requests:
 #                  cpu: 500m
 #                  memory: 1Gi
-#                limits:
-#                  cpu: 1
-#                  memory: 2Gi
+                limits:
+                  cpu: 1
+                  memory: 2Gi
               env:
                 - name: ZONE
                   valueFrom:
@@ -116,10 +116,10 @@ eck-elasticsearch:
             - name: elasticsearch
               resources:
                 requests:
-                  cpu: 150m
+#                  cpu: 150m
                   memory: 1Gi
                 limits:
-                  cpu: 150m
+                  cpu: 1
                   memory: 1Gi
               env:
                 - name: ZONE
