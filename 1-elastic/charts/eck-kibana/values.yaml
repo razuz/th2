@@ -83,10 +83,10 @@ eck-kibana:
             resources:
               requests:
                 memory: 1Gi
-                cpu: 250m
+#                cpu: 250m
               limits:
                 memory: 1Gi
-                cpu: 250m
+#                cpu: 250m
 
 #ingress:
 #  enabled: false
