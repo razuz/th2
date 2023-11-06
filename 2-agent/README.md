@@ -11,6 +11,9 @@
    C:\Users\student\Downloads\Sysmon64.exe -accepteula -i C:\Users\student\Downloads\config.xml
    ```
 
+   > [!NOTE]
+   > This sysmon config only has exclude statements. This means it's quite heavy in log volume. Think carefully before running that in production
+
 1. Go to Fleet in Kibana
 1. On the top right, click the `Add agent` button
 1. In the prompt select the `Create new agent policy` option
