@@ -8,7 +8,7 @@ git clone https://github.com/razuz/th2.git
 
 ## Deployment
 
-1. eck-operator
+1. eck-operator (SKIP THIS STEP !)
 
 ```shell
 helm upgrade eck-operator ./charts/eck-operator/ -n studentX --create-namespace --install
