@@ -16,6 +16,7 @@ eck-operator:
         "student10",
         "student11",
         "student12",
+        "student13",
     ]
     installCRDs: true
 
