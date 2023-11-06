@@ -32,10 +32,21 @@ helm upgrade eck-kibana ./charts/eck-kibana/ -n studentX --create-namespace --in
 helm upgrade eck-fleet ./charts/eck-fleet/ -n studentX --create-namespace --install
 ```
 
-## FAQ
+### Useful commands
 
-Get elastic password:
-
+* Get elastic password from kubernetes secrets
 ```
 kubectl get secret eck-elasticsearch-es-elastic-user -n studentX -o=jsonpath='{.data.elastic}' | base64 --decode; echo
+```
+* Get Elasticsearch status from CLI
+```shell
+kubectl get elasticsearch -n studentX
+```
+* Show resources in namespace
+```shell
+kubectl get all -n studentX
+```
+* Show logs from pod
+```shell
+kubectl logs -n studentX <pod-name>
 ```
