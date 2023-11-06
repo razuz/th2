@@ -1,4 +1,4 @@
-# Elastic agent
+# Elastic agent For Windows
 
 1. Log into your windows VM (Both RDP & SSH are available)
 2. Open a PowerShell window as admin

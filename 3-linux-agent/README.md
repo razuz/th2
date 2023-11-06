@@ -1,0 +1,2 @@
+# Elastic Agent for Linux
+
