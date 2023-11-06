@@ -19,5 +19,5 @@
 6. In the prompt select the `Create new agent policy` option
 7. Name the new policy `Windows` and click the `Create policy` button
 8. Leave step 2 as the default of enrolling to Fleet
-9 In step 3 click the tab titled Windows and run the provided PowerShell code in the Windows VM from an admin terminal
+9. In step 3 click the tab titled Windows and run the provided PowerShell code in the Windows VM from an admin terminal
 10. You should then see an agent check in and data start flowing
