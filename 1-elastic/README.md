@@ -50,6 +50,7 @@ ingress:
   enabled: false
 ```
 and comment in the ingress configuration:
+NB! bare in mind the `studentX` placement here !
 ```shell
 ingress:
   enabled: true
