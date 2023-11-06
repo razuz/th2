@@ -62,7 +62,7 @@ ingress:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     alb.ingress.kubernetes.io/backend-protocol: HTTPS
-    alb.ingress.kubernetes.io/load-balancer-name: eck-ingest
+    alb.ingress.kubernetes.io/load-balancer-name: eck-ingest-studentX
     alb.ingress.kubernetes.io/healthcheck-path: /
     alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.preserve_host_header.enabled=true
     external-dns.alpha.kubernetes.io/hostname: ingest-studentX.threatlab.ninja
