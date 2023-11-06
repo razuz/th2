@@ -32,7 +32,7 @@ eck-elasticsearch:
 #                  cpu: 250m
                   memory: 1Gi
                 limits:
-                  cpu: 1
+#                  cpu: 1
                   memory: 1Gi
               env:
                 - name: ZONE
@@ -78,7 +78,7 @@ eck-elasticsearch:
 #                  cpu: 500m
 #                  memory: 1Gi
                 limits:
-                  cpu: 1
+#                  cpu: 1
                   memory: 2Gi
               env:
                 - name: ZONE
@@ -119,7 +119,7 @@ eck-elasticsearch:
 #                  cpu: 150m
                   memory: 1Gi
                 limits:
-                  cpu: 1
+#                  cpu: 1
                   memory: 1Gi
               env:
                 - name: ZONE
