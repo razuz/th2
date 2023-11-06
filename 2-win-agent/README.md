@@ -1,8 +1,8 @@
 # Elastic agent
 
 1. Log into your windows VM (Both RDP & SSH are available)
-1. Open a PowerShell window as admin
-1. Install sysmon on the host with:
+2. Open a PowerShell window as admin
+3. Install sysmon on the host with:
 
    ```
 
@@ -14,10 +14,10 @@
    > [!NOTE]
    > This sysmon config only has exclude statements. This means it's quite heavy in log volume. Think carefully before running that in production
 
-1. Go to Fleet in Kibana
-1. On the top right, click the `Add agent` button
-1. In the prompt select the `Create new agent policy` option
-1. Name the new policy `Windows` and click the `Create policy` button
-1. Leave step 2 as the default of enrolling to Fleet
-1. In step 3 click the tab titled Windows and run the provided PowerShell code in the Windows VM from an admin terminal
-1. You should then see an agent check in and data start flowing
+4. Go to Fleet in Kibana
+5. On the top right, click the `Add agent` button
+6. In the prompt select the `Create new agent policy` option
+7. Name the new policy `Windows` and click the `Create policy` button
+8. Leave step 2 as the default of enrolling to Fleet
+9 In step 3 click the tab titled Windows and run the provided PowerShell code in the Windows VM from an admin terminal
+10. You should then see an agent check in and data start flowing
