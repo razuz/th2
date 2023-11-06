@@ -117,10 +117,10 @@ eck-elasticsearch:
               resources:
                 requests:
 #                  cpu: 150m
-                  memory: 0.5Gi
+                  memory: 1Gi
                 limits:
 #                  cpu: 1
-                  memory: 0.5Gi
+                  memory: 1Gi
               env:
                 - name: ZONE
                   valueFrom:
