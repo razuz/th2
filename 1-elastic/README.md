@@ -65,9 +65,9 @@ ingress:
     alb.ingress.kubernetes.io/load-balancer-name: eck-ingest
     alb.ingress.kubernetes.io/healthcheck-path: /
     alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.preserve_host_header.enabled=true
-    external-dns.alpha.kubernetes.io/hostname: ingest.studentX.threatlab.ninja
+    external-dns.alpha.kubernetes.io/hostname: ingest-studentX.threatlab.ninja
   hosts:
-    - host: ingest.studentX.threatlab.ninja
+    - host: ingest-studentX.threatlab.ninja
       paths:
         - path: /
           pathType: Prefix
