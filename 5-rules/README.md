@@ -23,12 +23,12 @@ pip install sigma-cli
 
 - Convert Windows Sigma rules for upload and save to a file
     ```shell
-    sigma convert -t lucene -p ecs_windows -f siem_rule_ndjson -o /srv/rules/sigma/aws_cloudtrail.ndjson rules/windows/
+    sigma convert -t lucene -p ecs_windows -f siem_rule_ndjson rules/windows/
     ```
 
 - Convert Linux Sigma rules for upload and save into a file on your computer
     ```shell
-    sigma convert -t lucene -p ecs_windows -f siem_rule_ndjson -o /srv/rules/sigma/aws_cloudtrail.ndjson rules/linux/
+    sigma convert -t lucene -p ecs_windows -f siem_rule_ndjson rules/linux/
     ```
 
 - Goto Kibana > Rules > SIEM
