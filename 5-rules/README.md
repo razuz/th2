@@ -21,6 +21,22 @@ pip install sigma-cli
 
 ### Converting community rules to Elasticsearch
 
+- Convert Windows Sigma rules for upload and save to a file
+    ```shell
+    sigma convert -t lucene -p ecs_windows -f siem_rule_ndjson -o /srv/rules/sigma/aws_cloudtrail.ndjson rules/windows/
+    ```
+
+- Convert Linux Sigma rules for upload and save into a file on your computer
+    ```shell
+    sigma convert -t lucene -p ecs_windows -f siem_rule_ndjson -o /srv/rules/sigma/aws_cloudtrail.ndjson rules/linux/
+    ```
+
+- Goto Kibana > Rules > SIEM
+- Click on "Import Rules"
+- Select the file you just created 
+  - please note there might be some errors
+
+### Useful commands
 - List which target SIEM solutions can sigma-cli convert to
 
     ```shell
@@ -50,17 +66,3 @@ pip install sigma-cli
     sigma convert -t elasticsearch -f default -p ecs_windows rules/windows/process_creation/proc_creation_win_powershell_base64_encoded_cmd.yml
     ```
 
-- Convert Windows Sigma rules for upload and save to a file
-    ```shell
-    sigma convert -t lucene -p ecs_windows -f siem_rule_ndjson -o /srv/rules/sigma/aws_cloudtrail.ndjson rules/windows/
-    ```
-
-- Convert Linux Sigma rules for upload and save into a file on your computer
-    ```shell
-    sigma convert -t lucene -p ecs_windows -f siem_rule_ndjson -o /srv/rules/sigma/aws_cloudtrail.ndjson rules/linux/
-    ```
-
-- Goto Kibana > Rules > SIEM
-- Click on "Import Rules"
-- Select the file you just created 
-  - please note there might be some errors
