@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: 2.14.0
+description: Elastic Cloud on Kubernetes (ECK) operator
+home: https://github.com/jertel/elastalert2/
+name: elastalert2
+version: 0.0.1
+dependencies:
+  - name: elastalert2
+    version: 2.14.0
+    repository: https://jertel.github.io/elastalert2/

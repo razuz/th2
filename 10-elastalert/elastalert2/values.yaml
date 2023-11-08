@@ -1,0 +1,47 @@
+elastalert2:
+  namespaceOverride: "elastalert"
+
+  #  rootRulesFolder: "rules"
+  #  enabledRules: ["deadman_slack"]
+
+  elasticsearch:
+    # elasticsearch endpoint e.g. (svc.namespace||svc)
+    host: eck-elasticsearch-es-http.elastic-service.svc.cluster.local
+    # elasticsearch port
+    port: 9200
+    # whether or not to connect to es_host using TLS
+    useSsl: "True"
+    # Username if authenticating to ES with basic auth
+    username: "elastalert"
+    # Password if authenticating to ES with basic auth
+    password: "userelastalertpass"
+    # whether or not to verify TLS certificates
+    verifyCerts: "False"
+
+  rules:
+    deadman_slack: |-
+      ---
+      name: Deadman Switch Slack
+      type: any
+      index: logs-*
+      alert_subject: "test"
+      alert_text: |-
+        An reapeat offender has been active on.
+
+      alert:
+        - hivealerter
+
+      hive_connection:
+        hive_host: https://hive.threatlab.ninja
+        hive_port: 443
+        hive_apikey: 'gMdEPiDqQznF8V+4RRj0sjzW14BP65XV'
+      
+      hive_alert_config:
+        type: 'test'
+        source: 'elastalert'
+        description: 'description disabled as we will be using alert_text to insert our Kibana URL'
+        severity: 1
+        tags: ['bruteforce' ]
+        tlp: 2
+        status: 'New'
+        follow: True
