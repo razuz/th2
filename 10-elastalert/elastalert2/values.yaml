@@ -11,7 +11,7 @@ elastalert2:
     # Username if authenticating to ES with basic auth
     username: "elastalert"
     # Password if authenticating to ES with basic auth
-    password: "userelastalertpass"
+    password: "__PASSWORD__"
     # whether or not to verify TLS certificates
     verifyCerts: "False"
 
