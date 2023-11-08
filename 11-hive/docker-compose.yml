@@ -35,7 +35,7 @@ services:
       - "cortex"
       - "--cortex-keys"
       # put cortex api key once cortex is bootstraped
-      - "<cortex_api_key>"
+      - ${CORTEX_KEY}
     networks:
       - proxy
       - backend
@@ -95,6 +95,10 @@ services:
     image: thehiveproject/cortex:3.1.7
     depends_on:
       - elasticsearch
+      - traefik
+    networks:
+      - proxy
+      - backend
     environment:
       - job_directory=/tmp/cortex-jobs
     volumes:
@@ -102,20 +106,29 @@ services:
       - /tmp/cortex-jobs:/tmp/cortex-jobs
     ports:
       - "9001:9001"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cortexdocker.entrypoints=https"
+      - "traefik.http.routers.cortexdocker.rule=Host(`${CORTEX_HOST}`)"
+      - "traefik.http.routers.cortexdocker.service=cortexdocker"
+      - "traefik.http.routers.cortexdocker.tls=true"
+      - "traefik.http.services.cortexdocker.loadbalancer.server.port=9001"
+      - "traefik.http.routers.cortexdocker.tls.certresolver=mytlschallenge"
 
-    traefik:
+      - "traefik.http.routers.cortexdocker_http.entrypoints=http"
+      - "traefik.http.routers.cortexdocker_http.rule=Host(`${CORTEX_HOST}`)"
+      - "traefik.http.routers.cortexdocker_http.middlewares=traefik-redirectscheme"
+      - "traefik.http.middlewares.traefik-redirectscheme.redirectscheme.scheme=https"
+
+  traefik:
     image: traefik:v2.3.3
-    environment:
-      - AWS_HOSTED_ZONE_ID=${AWS_HOSTED_ZONE_ID}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     restart: always
     container_name: traefik
     ports:
       - "80:80"
       - "443:443"
     command:
-      - --api.insecure=true # set to 'false' on production
+      - --api.insecure=false # set to 'false' on production
       - --api.dashboard=true
       - --api.debug=false
       - --log.level=DEBUG
@@ -126,10 +139,9 @@ services:
       - --entrypoints.http.address=:80
       - --entrypoints.https.address=:443
       - --certificatesResolvers.mytlschallenge.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # Generates LE test certificates.  Can be removed for production
-      - --certificatesResolvers.mytlschallenge.acme.dnsChallenge=true
-      - --certificatesResolvers.mytlschallenge.acme.dnsChallenge.provider=route53
       - --certificatesresolvers.mytlschallenge.acme.email=${LE_EMAIL}
       - --certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=http
 
     volumes:
       - "letsencrypt:/letsencrypt"
