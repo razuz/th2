@@ -6,7 +6,7 @@ elastalert2:
 
   elasticsearch:
     # elasticsearch endpoint e.g. (svc.namespace||svc)
-    host: eck-elasticsearch-es-http.elastic-service.svc.cluster.local
+    host: eck-elasticsearch-es-http.student13.svc.cluster.local
     # elasticsearch port
     port: 9200
     # whether or not to connect to es_host using TLS
@@ -23,7 +23,11 @@ elastalert2:
       ---
       name: Deadman Switch Slack
       type: any
-      index: logs-*
+      index: .alerts-security*
+      filter:
+      - term:
+          event.kind: "signal"
+
       alert_subject: "test"
       alert_text: |-
         An reapeat offender has been active on.
@@ -35,7 +39,7 @@ elastalert2:
         hive_host: https://hive.threatlab.ninja
         hive_port: 443
         hive_apikey: 'gMdEPiDqQznF8V+4RRj0sjzW14BP65XV'
-      
+
       hive_alert_config:
         type: 'test'
         source: 'elastalert'
