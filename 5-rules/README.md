@@ -21,6 +21,10 @@ pip install sigma-cli
 
 ### Converting community rules to Elasticsearch
 
+- Install the elasticsearch converter
+    ```shell
+    sigma plugin install elasticsearch
+    ```
 - Convert Windows Sigma rules for upload and save to a file
     ```shell
     sigma convert -t lucene -p ecs_windows -f siem_rule_ndjson rules/windows/
@@ -41,11 +45,6 @@ pip install sigma-cli
 
     ```shell
     sigma plugin list
-    ```
-- Install the elasticsearch converter
-
-    ```shell
-    sigma plugin install elasticsearch
     ```
 - Check which formats of Elasticsearch queries are supported (think Lucene or EQL aka SIEM rules)
 
