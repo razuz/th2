@@ -46,7 +46,7 @@ services:
       - "traefik.http.routers.thehivedocker.service=thehivedocker"
       - "traefik.http.routers.thehivedocker.tls=true"
       - "traefik.http.services.thehivedocker.loadbalancer.server.port=9000"
-      - "traefik.http.routers.thehivedocker.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.thehivedocker.tls.certresolver=letsencrypt"
 
       - "traefik.http.routers.thehivedocker_http.entrypoints=http"
       - "traefik.http.routers.thehivedocker_http.rule=Host(`${THEHIVE_HOST}`)"
@@ -113,7 +113,7 @@ services:
       - "traefik.http.routers.cortexdocker.service=cortexdocker"
       - "traefik.http.routers.cortexdocker.tls=true"
       - "traefik.http.services.cortexdocker.loadbalancer.server.port=9001"
-      - "traefik.http.routers.cortexdocker.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.cortexdocker.tls.certresolver=letsencrypt"
 
       - "traefik.http.routers.cortexdocker_http.entrypoints=http"
       - "traefik.http.routers.cortexdocker_http.rule=Host(`${CORTEX_HOST}`)"
