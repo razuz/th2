@@ -166,7 +166,6 @@ services:
 networks:
   backend:
   proxy:
-    external: true
 
 volumes:
   miniodata:
