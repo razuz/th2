@@ -78,6 +78,8 @@ services:
       - xpack.security.enabled=false
     volumes:
       - elasticsearchdata:/usr/share/elasticsearch/data
+    networks:
+      - backend
 
   minio:
     image: quay.io/minio/minio
