@@ -27,7 +27,7 @@ Run docker compose:
 docker compose up -d
 ```
 
-> [!INFO]
+> [!NOTE]
 > This docker compose file uses Let's Encrypt certificates with the http challenge i.e. public IP-s are required
 
 # Initial configuration
