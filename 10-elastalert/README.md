@@ -14,3 +14,16 @@
 
 1. Get API key for TheHive
 2. update `values.yaml` according to your parameters
+3. Run Elastalert
+```shell
+helm upgrade elastalert ./elastalert2/ --create-namespace --install -n studentX
+```
+4. Go to Kibana > Dev Tools and run the following command to fix index
+```json
+PUT /elastalert/_mapping
+{
+  "properties": {
+      "alert_time": {"type": "date"}
+  }
+}
+```
