@@ -92,6 +92,8 @@ services:
       - "9090:9090"
     volumes:
       - "miniodata:/data"
+    networks:
+      - backend
 
   cortex:
     image: thehiveproject/cortex:3.1.7
