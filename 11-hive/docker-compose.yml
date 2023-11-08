@@ -121,28 +121,48 @@ services:
       - "traefik.http.middlewares.traefik-redirectscheme.redirectscheme.scheme=https"
 
   traefik:
-    image: traefik:v2.3.3
+    image: traefik:v2.5
     restart: always
     container_name: traefik
     ports:
       - "80:80"
       - "443:443"
     command:
-      - --api.insecure=false # set to 'false' on production
-      - --api.dashboard=true
-      - --api.debug=false
-      - --log.level=DEBUG
-      - --providers.docker=true
-      - --providers.docker.swarmMode=false
-      - --providers.docker.exposedbydefault=false
-      - --providers.docker.network=proxy
-      - --entrypoints.http.address=:80
-      - --entrypoints.https.address=:443
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=http"
-      - --certificatesResolvers.mytlschallenge.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # Generates LE test certificates.  Can be removed for production
-      - --certificatesresolvers.mytlschallenge.acme.email=${LE_EMAIL}
-      - --certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json
+      - "--global.checknewversion=false"
+      - "--global.sendanonymoususage=false"
+      - "--log=true"
+      - "--log.level=INFO"
+      - "--entrypoints.http=true"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.http.http.redirections.entrypoint.to=https"
+      - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.https=true"
+      - "--entrypoints.https.address=:443"
+      - "--certificatesresolvers.letsencrypt"
+      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.email=webmaster@threatlab.ninja"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
+      - "--providers.docker"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+    #command:
+    #  - --api.insecure=false # set to 'false' on production
+    #  - --api.dashboard=true
+    #  - --api.debug=false
+    #  - --log.level=DEBUG
+    #  - --providers.docker=true
+    #  - --providers.docker.swarmMode=false
+    #  - --providers.docker.exposedbydefault=false
+    #  - --providers.docker.network=proxy
+    #  - --entrypoints.http.address=:80
+    #  - --entrypoints.https.address=:443
+    #  - --acme.httpChallenge.entryPoint=http
+    #  - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+    #  - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=http"
+    #  - --certificatesResolvers.mytlschallenge.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # Generates LE test certificates.  Can be removed for production
+    #  - --certificatesresolvers.mytlschallenge.acme.email=${LE_EMAIL}
+    #  - --certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json
 
     volumes:
       - "letsencrypt:/letsencrypt"
@@ -150,19 +170,19 @@ services:
     networks:
       - proxy
 
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api.entrypoints=https"
-      - "traefik.http.routers.api.rule=Host(`${TRAEFIK_HOST}`)"
-      - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.tls=true"
-      - "traefik.http.services.api.loadbalancer.server.port=8080"
-      - "traefik.http.routers.api.tls.certresolver=mytlschallenge"
+    #labels:
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.api.entrypoints=https"
+    #  - "traefik.http.routers.api.rule=Host(`${TRAEFIK_HOST}`)"
+    #  - "traefik.http.routers.api.service=api@internal"
+    #  - "traefik.http.routers.api.tls=true"
+    #  - "traefik.http.services.api.loadbalancer.server.port=8080"
+    #  - "traefik.http.routers.api.tls.certresolver=mytlschallenge"
 
-      - "traefik.http.routers.api_http.entrypoints=http"
-      - "traefik.http.routers.api_http.rule=Host(`${TRAEFIK_HOST}`)"
-      - "traefik.http.routers.api_http.middlewares=traefik-redirectscheme"
-      - "traefik.http.middlewares.traefik-redirectscheme.redirectscheme.scheme=https"
+    #  - "traefik.http.routers.api_http.entrypoints=http"
+    #  - "traefik.http.routers.api_http.rule=Host(`${TRAEFIK_HOST}`)"
+    #  - "traefik.http.routers.api_http.middlewares=traefik-redirectscheme"
+    #  - "traefik.http.middlewares.traefik-redirectscheme.redirectscheme.scheme=https"
 
 networks:
   backend:
