@@ -73,16 +73,14 @@ Additional information can be found at:
 
 Init elasticsearch
 ```shell
-sudo  /opt/arkime/db/db.pl --esuser arkime:arkimeuser https://ingest-student13.threatlab.ninja init
+sudo  /opt/arkime/db/db.pl --esuser arkime:arkimeuser https://ingest-studentX.threatlab.ninja init
 ```
 
-Note !
-There seems to be some bug in the init script which occasionally doesn't properly add user.
-To work around this you need to manually edit config file `/opt/arkime/etc/config.ini` and update following line:
+To add your Elasticsearch credential edit config file `/opt/arkime/etc/config.ini` and update following line:
 ```
 elasticsearch=https://USERNAME:PASSWORD@ingest-studentX.threatlab.ninja
 ```
-If you experience the same issue then just change the config and restart capture `systemctl restart arkimecapture.service`
+
 
 create user 
 ```shell
