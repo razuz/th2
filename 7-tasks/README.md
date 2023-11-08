@@ -13,4 +13,4 @@ What's wrong with the rule : Account Discovery Command via SYSTEM Account
 Create a query and alert for certutil file downloads
 
 ## Task 5
-Create a query and alert for failed SSH logins
+Create a query and alert for failed SSH logins on your linux host
