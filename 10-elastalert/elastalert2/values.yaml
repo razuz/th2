@@ -28,11 +28,12 @@ elastalert2:
       - term:
           event.kind: "signal"
 
-      alert_subject: "{0}"
+      alert_subject: "Alert is {0}"
       alert_subject_args:
         - kibana.alert.rule.name
       alert_text_type: alert_text_jinja
       alert_text: |-
+        The details of the alert are the following:
         {{ kibana.alert.reason }}
         {{ kibana.alert.rule.description }}
 
