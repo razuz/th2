@@ -6,7 +6,7 @@ elastalert2:
 
   elasticsearch:
     # elasticsearch endpoint e.g. (svc.namespace||svc)
-    host: eck-elasticsearch-es-http.student13.svc.cluster.local
+    host: eck-elasticsearch-es-http.studentX.svc.cluster.local
     # elasticsearch port
     port: 9200
     # whether or not to connect to es_host using TLS
@@ -28,9 +28,13 @@ elastalert2:
       - term:
           event.kind: "signal"
 
-      alert_subject: "test"
+      alert_subject: "{0}"
+      alert_subject_args:
+        - kibana.alert.rule.name
+      alert_text_type: alert_text_jinja
       alert_text: |-
-        An reapeat offender has been active on.
+        {{ kibana.alert.reason }}
+        {{ kibana.alert.rule.description }}
 
       alert:
         - hivealerter
@@ -42,7 +46,7 @@ elastalert2:
 
       hive_alert_config:
         type: 'test'
-        source: 'elastalert'
+        source: 'studentX'
         description: 'description disabled as we will be using alert_text to insert our Kibana URL'
         severity: 1
         tags: ['bruteforce' ]
