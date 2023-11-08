@@ -139,9 +139,10 @@ services:
       - --entrypoints.http.address=:80
       - --entrypoints.https.address=:443
       - --certificatesResolvers.mytlschallenge.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # Generates LE test certificates.  Can be removed for production
+      - --certificatesResolvers.mytlschallenge.acme.httpChallenge=true
       - --certificatesresolvers.mytlschallenge.acme.email=${LE_EMAIL}
       - --certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json
-      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=http
+      - --certificatesresolvers.myresolver.acme.httpChallenge.entrypoint=http
 
     volumes:
       - "letsencrypt:/letsencrypt"
