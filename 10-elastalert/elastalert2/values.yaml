@@ -2,17 +2,11 @@ elastalert2:
   namespaceOverride: "elastalert"
 
   elasticsearch:
-    # elasticsearch endpoint e.g. (svc.namespace||svc)
     host: eck-elasticsearch-es-http.studentX.svc.cluster.local
-    # elasticsearch port
     port: 9200
-    # whether or not to connect to es_host using TLS
     useSsl: "True"
-    # Username if authenticating to ES with basic auth
     username: "elastalert"
-    # Password if authenticating to ES with basic auth
     password: "__PASSWORD__"
-    # whether or not to verify TLS certificates
     verifyCerts: "False"
 
   rules:
