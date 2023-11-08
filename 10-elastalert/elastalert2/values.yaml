@@ -35,13 +35,13 @@ elastalert2:
       hive_connection:
         hive_host: https://hive.threatlab.ninja
         hive_port: 443
-        hive_apikey: 'gMdEPiDqQznF8V+4RRj0sjzW14BP65XV'
+        hive_apikey: '__YOUR_API_KEY__'
 
       hive_alert_config:
         type: 'test'
         source: 'studentX'
         severity: 1
-        tags: ['bruteforce' ]
+        tags: [ 'some_tag' ]
         tlp: 2
         status: 'New'
         follow: True
