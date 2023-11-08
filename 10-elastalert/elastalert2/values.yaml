@@ -34,8 +34,8 @@ elastalert2:
       alert_text_type: alert_text_jinja
       alert_text: |-
         The details of the alert are the following:
-        {{ kibana.alert.reason }}
-        {{ kibana.alert.rule.description }}
+        {{ kibana['alert']['reason'] }}
+        {{ kibana['alert']['rule']['description'] }}
 
       alert:
         - hivealerter
