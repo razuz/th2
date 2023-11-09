@@ -1,6 +1,16 @@
+# Suricata
+
+Suricata is an open-source IDS/IPS
+
 ### Install Suricata
 
 Official docs: https://docs.suricata.io/en/latest/quickstart.html
+
+We will install suricata on our Linux VM. So log in to:
+
+```
+ssh student@studentX.threatlab.ninja
+```
 
 ```shell
 sudo add-apt-repository ppa:oisf/suricata-stable
