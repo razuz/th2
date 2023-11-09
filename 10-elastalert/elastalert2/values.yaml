@@ -45,3 +45,9 @@ elastalert2:
         tlp: 2
         status: 'New'
         follow: True
+
+      hive_observable_data_mapping:
+        - domain: agent.hostname
+          tlp: 2
+          tags: ['tag1', 'tag2']
+          message: 'agent hostname'
