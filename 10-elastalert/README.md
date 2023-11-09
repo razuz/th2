@@ -13,12 +13,29 @@
 ### Elastalert
 
 1. Get API key for TheHive
-2. update `values.yaml` according to your parameters
-3. Run Elastalert
+2. SSH into the jumphost
+```shell
+ssh studentX@lab.threatlab.ninja
+```
+3. update your git repo folder th2
+```shell
+cd th2/
+git pull
+```
+4. Go to `10-elastalert` folder and update helm chart dependencies
+```shell
+cd 10-elastalert/elastalert2
+helm dependency build
+```
+5. update `values.yaml` according to your parameters
+   * replace studentX with your student number
+   * update password for `elastalert` user
+   * add Hive API key : `hp5VaEXUV4bgMbLCJVhcvHqwhrVTXD8E` 
+6. Run Elastalert
 ```shell
 helm upgrade elastalert ./elastalert2/ --create-namespace --install -n studentX
 ```
-4. Go to Kibana > Dev Tools and run the following command to fix index
+7. Go to Kibana > Dev Tools and run the following command to fix index
 ```json
 PUT /elastalert/_mapping
 {
